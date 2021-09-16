@@ -1,44 +1,98 @@
+
 %*----------- SLIDE -------------------------------------------------------------
-\begin{frame}[t]{As lideranças das equipes dos Novos Talentos}
-    \vspace{0.5cm}
-    \begin{columns}
-        \column{.01\textwidth}
-        \column{.7\textwidth}
-            \begin{itemize}
-                \item equipe \tikznode{cmark}{RAJA} será liderada por Aziel Freitas
-                \item equipe \Circled[outer color=red, inner ysep=8pt]{BORG} será liderada por Mateus Cerqueira.
-                \item equipe TIMON-HM será liderada por Leonardo Lima.
-            \end{itemize}
-        \column{.29\textwidth}
-            \includegraphics[width=.9\textwidth, trim={10cm 0 10cm 0},clip]{equipe}
-    \end{columns}
-    \vspace{1cm}
-    
-    \emph{Para este desafio não será cobrado o relatório técnico, porém o acompanhamento deverá seguir o mesmo ritmo dos desafios anteriores.}
-    
-    \begin{tikzpicture}[remember picture,overlay]
-        \draw[red,very thick] (cmark) circle[x radius=8mm,y radius=4mm]; 
-    \end{tikzpicture}
+\begin{frame}[fragile, t]{Primeiros passos}
+    \begin{enumerate}
+        \item Instalar Docker
+            \href{https://docs.docker.com/engine/install/ubuntu/}{Instalação para Ubuntu}
+        \item Hello world
+        \begin{lstlisting}
+            $ sudo docker run hello-world
+        \end{lstlisting}
+        \item Instalar extensão para VSCode
+            ID: ms-azuretools.vscode-docker
+    \end{enumerate}
 %*----------- notes
     \note[item]{Notes can help you to remember important information. Turn on the notes option.}
 \end{frame}
 %-
 %*----------- SLIDE -------------------------------------------------------------
-\begin{frame}[t]{O progresso das equipes}
-    Um dos indicadores para o acompanhamento das equipes será o percentual de conclusão geral da equipe.
-    O planejamento das atividades deverá seguir a metodologia aplicada no desenvolvimento de projetos de robótica.
-    \newline
-    %\vspace{0.5cm}
-    \begin{table}[ht!]
-    \centering
-        \caption{PERCENTUAL DE CONCLUSÃO POR EQUIPE}
-        \begin{tabular}{|l|c|c|c|c|} \hline
-            \textbf{EQUIPE}&\textbf{04/05}&\textbf{11/05}&\textbf{18/05}&\textbf{25/05}\\ \hline
-            RAJA & 17\% &32\% & &  \\ \hline
-            BORG & 0\% &41\% & &  \\ \hline
-            TIMON-HM & 5\% &47\% & &  \\ \hline
-        \end{tabular}
-    \end{table}
+\begin{frame}[fragile, t]{Comandos básicos}
+
+    \begin{lstlisting}
+        # Extrair/enviar uma imagem para um repositorio
+        $ docker pull ubuntu:bionic
+        $ docker push ubuntu:bionic25
+
+        # Cria e inicializa um container gravavel 
+        $ docker run [OPTIONS] ubuntu:bionic bash
+
+        # Pausa/Inicia um ou mais containers
+        $ docker stop NAME
+        $ docker start NAME
+
+        # Executa um comando em um container em execucao
+        $ docker exec -ti NAME 
+
+    \end{lstlisting}
+%*----------- notes
+    \note[item]{Notes can help you to remember important information. Turn on the notes option.}
+\end{frame}
+%-
+%*----------- SLIDE -------------------------------------------------------------
+\begin{frame}[fragile, t]{Comandos básicos}
+
+    \begin{lstlisting}
+        # Mostra as imagens criadas,tamanho,repositorio,tag 
+        $ docker image ls
+
+        # Lista containers
+        $ docker ps [OPTIONS]
+
+        # Para fechar um terminal integrado com o container
+          "Ctrl+D"
+
+        # Remove um ou mais containers/imagens
+        $ docker rm [OPTIONS] NAME 
+        $ docker rmi [OPTIONS] NAME_IMAGE 
+
+
+    \end{lstlisting}
+%*----------- notes
+    \note[item]{Notes can help you to remember important information. Turn on the notes option.}
+\end{frame}
+%-
+%*----------- SLIDE -------------------------------------------------------------
+\begin{frame}[fragile, t]{Docker+ROS}
+    1- Iniciar um \textit{container} com a imagem do ros que deseja; 
+    
+    2- Iniciar um \textit{container} com a imagem do Ubuntu necessário para o ros e então \href{http://wiki.ros.org/kinetic/Installation/Ubuntu}{instalar} o ros normalmente
+    \begin{lstlisting}
+        docker pull ubuntu:xenial
+        docker run --name teste -ti ubuntu:xenial  bash
+        apt-get update && apt-get install -y lsb-release wget && apt-get clean all  
+
+        # seguir com os passos da instalação do ros
+
+    \end{lstlisting}
+%*----------- notes
+    \note[item]{Notes can help you to remember important information. Turn on the notes option.}
+\end{frame}
+%-
+%*----------- SLIDE -------------------------------------------------------------
+\begin{frame}[fragile, t]{GUI's+ROS}
+    # explicar a forma mais segura
+    \begin{lstlisting}
+        docker run -it \
+            --env="DISPLAY" \
+            --env="QT_X11_NO_MITSHM=1" \
+            --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+            ubuntu:xenial \
+        export containerId=$(docker ps -l -q)
+
+        xhost +local:`docker inspect --format='{{ .Config.Hostname }}' $containerId`
+        docker start $containerId
+
+    \end{lstlisting}
 %*----------- notes
     \note[item]{Notes can help you to remember important information. Turn on the notes option.}
 \end{frame}
